@@ -1,4 +1,3 @@
-// -*- explicit-buffer-name: "XmlUtil.cpp<M1-MOBJ/6>" -*-
 #include "XmlUtil.h"
 #include <cstdlib>
 #include <iostream>
@@ -9,8 +8,7 @@ namespace Netlist {
   using namespace std;
 
 
-  std::string  xmlCharToString( xmlChar* xmls )
-  {
+  std::string  xmlCharToString( xmlChar* xmls ){
     string s;
 
     if (xmls) {

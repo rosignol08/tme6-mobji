@@ -1,16 +1,14 @@
-// -*- explicit-buffer-name: "XmlUtil.h<M1-MOBJ/6>" -*-
-
 #ifndef NETLIST_XMLUTIL_H
 #define NETLIST_XMLUTIL_H
 
-#include <libxml/xmlreader.h>
+#include <libxml2/libxml/xmlreader.h>
 #include <string>
 
 namespace Netlist {
 
 
-  std::string  xmlCharToString    ( xmlChar* );
-  bool         xmlGetIntAttribute ( xmlTextReaderPtr, const std::string& attribute, int& value );
+  std::string  xmlCharToString    ( xmlChar* truc);
+  bool         xmlGetIntAttribute ( xmlTextReaderPtr autre_truc, const std::string& attribute, int& value );
 
 
 }  // Netlist namespace.

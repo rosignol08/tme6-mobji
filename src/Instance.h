@@ -45,6 +45,7 @@ namespace Netlist {
                 void                      setPosition   (const Point&);
                 void                      setPosition   (int x, int y);
                 void                      toXml         (std::ostream&);
+                Instance*                 fromXml      ( xmlTextReaderPtr reader );
         /*
         class Term   masterCell_;
             std::string         name_;

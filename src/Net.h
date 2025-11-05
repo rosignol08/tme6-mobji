@@ -38,6 +38,7 @@ namespace Netlist {
                     void                      add             (Node*);
                     bool                      remove          (Node*);
                     void                      toXml           (std::ostream&);
+                    Net*                      fromXml         ( xmlTextReaderPtr reader );
     };
 }
 #endif
