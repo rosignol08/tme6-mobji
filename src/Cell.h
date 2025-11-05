@@ -37,10 +37,10 @@ namespace Netlist {
                       void                    remove            ( Net* );
                       bool                    connect           ( const std::string& name, Net* net );
                       unsigned int            newNetId          ();
-                      void                    toXml             ( std::ostream& stream );
-                      Cell*                   fromXml           ( xmlTextReaderPtr reader );
-                      Cell* Cell::load ( const string& cellName );
-                      void  Cell::save () const ;
+                      void                    toXml             ( std::ostream& stream ) const;
+               static Cell*                   fromXml           ( xmlTextReaderPtr reader );
+               static Cell*                   load              ( const std::string& cellName );
+                      void                    save () const ;
 
     private:
         static  std::vector<Cell*>  cells_;

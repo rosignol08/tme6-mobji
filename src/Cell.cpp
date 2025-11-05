@@ -1,6 +1,7 @@
 // -*- explicit-buffer-name: "Cell.cpp<M1-MOBJ/4-5>" -*-
 
 #include  <cstdlib>
+#include  <fstream>
 #include  "Cell.h"
 #include  "Term.h"
 #include  "Net.h"
@@ -162,7 +163,7 @@ namespace Netlist {
   void afficherNombreCaracteres(const std::string& s) {
     std::cout << "Nombre de caractères: " << s.size() << std::endl;
   }
-  void Cell::toXml(ostream& stream){
+  void Cell::toXml(ostream& stream)const {
     stream << "<cell name=\"" << name_ << "\">\n";
     ++indent;
 

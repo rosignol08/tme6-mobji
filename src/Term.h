@@ -45,7 +45,7 @@ namespace Netlist {
             void                    setPosition     ( int x , int y );
             void                    setDirection    ( Direction );
             void                    toXml           ( std::ostream& );
-            Term*                   fromXml           ( xmlTextReaderPtr reader );
+    static  Term*                   fromXml         ( Cell* cell, xmlTextReaderPtr reader );
         private:
             void*           owner_;
             std::string     name_;

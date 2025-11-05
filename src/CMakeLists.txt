@@ -16,7 +16,7 @@ set (CMAKE_INSTALL_PREFIX       "../install" )
 include_directories( ${SCHEMATIC_SOURCE_DIR} ${LIBXML2_INCLUDE_DIR})
 set( includes Indentation.h Term.h Net.h Instance.h Point.h Node.h Cell.h)
 
-set( cpps Indentation.cpp Term.cpp Net.cpp Instance.cpp Point.cpp Node.cpp Cell.cpp Main.cpp )
+set( cpps Indentation.cpp Term.cpp Net.cpp Instance.cpp Point.cpp Node.cpp Cell.cpp Main.cpp XmlUtil.cpp XmlUtil.h)
 
 add_executable ( tme6 ${cpps} ) 
 install ( TARGETS tme6 DESTINATION bin ) 

@@ -125,31 +125,26 @@ namespace Netlist{
         }
         stream << "\"/>\n";
     }
-    Cell* Cell::fromXml ( xmlTextReaderPtr reader ) {
+    Term* Term::fromXml (Cell* cell, xmlTextReaderPtr reader ) {
     enum  State { Init           = 0
-                  , BeginCell
                   , BeginTerms
                   , EndTerms
-                  , BeginInstances
-                  , EndInstances
-                  , BeginNets
-                  , EndNets
-                  , EndCell
                   };
 
-    const xmlChar* cellTag      = xmlTextReaderConstString( reader, (const xmlChar*)"cell" );
-    const xmlChar* netsTag      = xmlTextReaderConstString( reader, (const xmlChar*)"nets" );
+    //const xmlChar* cellTag      = xmlTextReaderConstString( reader, (const xmlChar*)"cell" );
+    //const xmlChar* netsTag      = xmlTextReaderConstString( reader, (const xmlChar*)"nets" );
     const xmlChar* termsTag     = xmlTextReaderConstString( reader, (const xmlChar*)"terms" );
-    const xmlChar* instancesTag = xmlTextReaderConstString( reader, (const xmlChar*)"instances" );
+    //const xmlChar* instancesTag = xmlTextReaderConstString( reader, (const xmlChar*)"instances" );
 
-    Cell* cell   = NULL;
+    //Cell* cell   = NULL;
+    Term* term = nullptr;
     State state  = Init;
 
     while ( true ) {
         int status = xmlTextReaderRead(reader);
         if (status != 1) {
           if (status != 0) {
-            cerr << "[ERROR] Cell::fromXml(): Unexpected termination of the XML parser." << endl;
+            cerr << "[ERROR] Term::fromXml(): Unexpected termination of the XML parser." << endl;
           }
           break;
         }
@@ -165,72 +160,101 @@ namespace Netlist{
 
         switch ( state ) {
           case Init:
-            if (cellTag == nodeName) {
-              state = BeginCell;
-              string cellName = xmlCharToString( xmlTextReaderGetAttribute( reader, (const xmlChar*)"name" ) );
-              if (not cellName.empty()) {
-                cell = new Cell ( cellName );
-                state = BeginTerms;
+          if(termsTag == nodeName){
+            state = BeginTerms;
+            string termName = xmlCharToString( xmlTextReaderGetAttribute( reader, (const xmlChar*)"name" ) ); //référence indéfinie vers « Netlist::xmlCharToString[abi:cxx11](unsigned char*) »
+            
+            if (not termName.empty()){
+                string dirString = xmlCharToString( xmlTextReaderGetAttribute( reader, (const xmlChar*)"direction" ) );
+                Direction dir;
+                if(dirString == "In"){
+                    dir = In;
+                }else if(dirString == "Out"){
+                    dir = Out;
+                }else if(dirString == "Inout"){
+                    dir = Inout;
+                }else if(dirString == "Tristate"){
+                    dir = Tristate;
+                }else if(dirString == "Transcv"){
+                    dir = Transcv;
+                }else{
+                    dir = Unknown;
+                }
+                //Term temporaire
+                term = new Term ( cell, termName, dir );
+                state = EndTerms;
                 continue;
-              }
             }
             break;
+          }
+            
+            //if (cellTag == nodeName) {
+            //  state = BeginCell;
+            //  string cellName = xmlCharToString( xmlTextReaderGetAttribute( reader, (const xmlChar*)"name" ) );
+            //  if (not cellName.empty()) {
+            //    cell = new Cell ( cellName );
+            //    state = BeginTerms;
+            //    continue;
+            //  }
+            //}
+            //break;{
           case BeginTerms:
             if ( (nodeName == termsTag) and (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT) ) {
-              state = EndTerms;
-              continue;
+                state = EndTerms;
+                continue;
             }
             break;
           case EndTerms:
             if ( (nodeName == termsTag) and (xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT) ) {
-              state = BeginInstances;
-              continue;
-            } else {
-              if (Term::fromXml(cell,reader)) continue;
-            }
-            break;
-          case BeginInstances:
-            if ( (nodeName == instancesTag) and (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT) ) {
-              state = EndInstances;
+              //state = $;
               continue;
             }
             break;
-          case EndInstances:
-            if ( (nodeName == instancesTag) and (xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT) ) {
-              state = BeginNets;
-              continue;
-            } else {
-              if (Instance::fromXml(cell,reader)) continue;
-            }
-            break;
-          case BeginNets:
-            if ( (nodeName == netsTag) and (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT) ) {
-              state = EndNets;
-              continue;
-            }
-            break;
-          case EndNets:
-            if ( (nodeName == netsTag) and (xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT) ) {
-              state = EndCell;
-              continue;
-            } else {
-              if (Net::fromXml(cell,reader)) continue;
-            }
-            break;
-          case EndCell:
-            if ( (nodeName == cellTag) and (xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT) ) {
-              continue;
-            }
-            break;
+          //case BeginInstances:
+          //  if ( (nodeName == instancesTag) and (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT) ) {
+          //    state = EndInstances;
+          //    continue;
+          //  }
+          //  break;
+          //case EndInstances:
+          //  if ( (nodeName == instancesTag) and (xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT) ) {
+          //    state = BeginNets;
+          //    continue;
+          //  } else {
+          //    if (Instance::fromXml(cell,reader)) continue;
+          //  }
+          //  break;
+          //case BeginNets:
+          //  if ( (nodeName == netsTag) and (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT) ) {
+          //    state = EndNets;
+          //    continue;
+          //  }
+          //  break;
+          //case EndNets:
+          //  if ( (nodeName == netsTag) and (xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT) ) {
+          //    state = EndCell;
+          //    continue;
+          //  } else {
+          //    if (Net::fromXml(cell,reader)) continue;
+          //  }
+          //  break;
+          //case EndCell:
+          //  if ( (nodeName == cellTag) and (xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT) ) {
+          //    continue;
+          //  }
+          //break;
           default:
             break;
         }
 
-        cerr << "[ERROR] Cell::fromXml(): Unknown or misplaced tag <" << nodeName << "> (line:" << xmlTextReaderGetParserLineNumber(reader) << ")." << endl;
+        cerr << "[ERROR] Term::fromXml(): Unknown or misplaced tag <" << nodeName << "> (line:" << xmlTextReaderGetParserLineNumber(reader) << ")." << endl;
+        //renvoie un ptr NULL en cas d'erreur
+        //delete term;
+        term = nullptr; //TODO checker si on tombe sur ces lignes tout le temps
         break;
   }
 
-  return cell;
+  return term;
 }
 
 }
