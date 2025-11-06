@@ -1,7 +1,0 @@
-/home/romaric/Documents/cours_M1/M1_S1/cours_mobj/tme6-mobji/build/CMakeFiles/tme6.dir
-/home/romaric/Documents/cours_M1/M1_S1/cours_mobj/tme6-mobji/build/CMakeFiles/edit_cache.dir
-/home/romaric/Documents/cours_M1/M1_S1/cours_mobj/tme6-mobji/build/CMakeFiles/rebuild_cache.dir
-/home/romaric/Documents/cours_M1/M1_S1/cours_mobj/tme6-mobji/build/CMakeFiles/list_install_components.dir
-/home/romaric/Documents/cours_M1/M1_S1/cours_mobj/tme6-mobji/build/CMakeFiles/install.dir
-/home/romaric/Documents/cours_M1/M1_S1/cours_mobj/tme6-mobji/build/CMakeFiles/install/local.dir
-/home/romaric/Documents/cours_M1/M1_S1/cours_mobj/tme6-mobji/build/CMakeFiles/install/strip.dir
