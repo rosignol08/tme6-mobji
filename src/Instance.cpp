@@ -102,4 +102,82 @@ namespace Netlist{
                 else stream << "None";
                 stream << "\" x=\"" << position_.getX() << "\" y=\"" << position_.getY() << "\"/>\n";
             }
+//TODO voir de quoi est composée une instance 
+            Instance* Instance::fromXml (Cell* cell, xmlTextReaderPtr reader ) {
+                enum  State { Init           = 0
+                  , BeginCell
+                  , BeginTerms
+                  , EndTerms
+                  , BeginInstances
+                  , EndInstances
+                  , BeginNets
+                  , EndNets
+                  , EndCell
+                  };
+
+    //const xmlChar* cellTag      = xmlTextReaderConstString( reader, (const xmlChar*)"cell" );
+    //const xmlChar* netsTag      = xmlTextReaderConstString( reader, (const xmlChar*)"nets" );
+    //const xmlChar* termsTag     = xmlTextReaderConstString( reader, (const xmlChar*)"terms" );
+    const xmlChar* instancesTag = xmlTextReaderConstString( reader, (const xmlChar*)"instances" );
+
+    Cell* mastercell   = NULL;
+    Instance* Inst = nullptr;
+    State state  = Init;
+
+    while ( true ) {
+        int status = xmlTextReaderRead(reader);
+        if (status != 1) {
+          if (status != 0) {
+            cerr << "[ERROR] Instance::fromXml(): Unexpected termination of the XML parser." << endl;
+          }
+          break;
+        }
+
+        switch ( xmlTextReaderNodeType(reader) ) {
+          case XML_READER_TYPE_COMMENT:
+          case XML_READER_TYPE_WHITESPACE:
+          case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
+            continue;
+        }
+
+        const xmlChar* nodeName = xmlTextReaderConstLocalName( reader );
+
+        switch ( state ) {
+          case Init:
+            if (instancesTag == nodeName) {
+              state = BeginInstances;
+              string instanceName = xmlCharToString( xmlTextReaderGetAttribute( reader, (const xmlChar*)"name" ) );
+                string masterCellName = xmlCharToString( xmlTextReaderGetAttribute( reader, (const xmlChar*)"mastercell" ) );
+              if (not instanceName.empty()) {
+                mastercell = Cell::find(masterCellName);
+                Inst = new Instance (cell, mastercell, instanceName);
+                state = EndInstances;//TODO check si c'est bien ça
+                continue;
+              }
+            }
+            break;
+          case BeginInstances:
+            if ( (nodeName == instancesTag) and (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT) ) {
+              state = EndInstances;
+              continue;
+            }
+            break;
+          case EndInstances:
+            if ( (nodeName == instancesTag) and (xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT) ) {
+              state = BeginNets;
+              continue;
+            } else {
+              if (Instance::fromXml(cell,reader)) continue;
+            }
+            break;
+          default:
+            break;
+        }
+
+        cerr << "[ERROR] Instance::fromXml(): Unknown or misplaced tag <" << nodeName << "> (line:" << xmlTextReaderGetParserLineNumber(reader) << ")." << endl;
+        break;
+  }
+
+  return Inst;
+}
 }

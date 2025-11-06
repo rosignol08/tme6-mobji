@@ -301,8 +301,7 @@ namespace Netlist {
 
   return cell;
 }
-Cell* Cell::load ( const string& cellName )
-{
+Cell* Cell::load ( const string& cellName ){
   string           cellFile = "./cells/" + cellName + ".xml";
   xmlTextReaderPtr reader;
 
@@ -318,8 +317,7 @@ Cell* Cell::load ( const string& cellName )
   return cell;
 }
 
-void  Cell::save () const
-{
+void  Cell::save () const{
   string  fileName   = getName() + ".xml";
   fstream fileStream ( fileName.c_str(), ios_base::out|ios_base::trunc );
   if (not fileStream.good()) {
