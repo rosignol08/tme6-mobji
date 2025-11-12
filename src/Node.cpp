@@ -37,7 +37,7 @@ namespace Netlist {
     if (inst){
       stream << " instance=\"" << inst->getName() << "\"";
     }
-    stream << "\" id=\"" << id_ << "\" x=\"" << position_.getX() << "\" y=\"" << position_.getY() << "\">\n";
+    stream << "\" id=\"" << id_ << "\" x=\"" << position_.getX() << "\" y=\"" << position_.getY() << "\"/>\n";
   }
 
 

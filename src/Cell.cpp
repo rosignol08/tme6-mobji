@@ -194,6 +194,7 @@ namespace Netlist {
     indent--;
     stream << indent << "</cell>\n";
   }
+
   Cell* Cell::fromXml ( xmlTextReaderPtr reader ) {
     enum  State { Init           = 0
                   , BeginCell
@@ -303,9 +304,14 @@ namespace Netlist {
 }
 Cell* Cell::load ( const string& cellName ){
   string           cellFile = "./cells/" + cellName + ".xml";
-  xmlTextReaderPtr reader;
+  xmlTextReaderPtr reader = NULL;
 
+  /* Try default ./cells/, then ./work/cells/ to be tolerant to cwd */
   reader = xmlNewTextReaderFilename( cellFile.c_str() );
+  if (reader == NULL) {
+    cellFile = "../work/cells/" + cellName + ".xml";
+    reader = xmlNewTextReaderFilename( cellFile.c_str() );
+  }
   if (reader == NULL) {
     cerr << "[ERROR] Cell::load() unable to open file <" << cellFile << ">." << endl;
     return NULL;

@@ -31,6 +31,7 @@ namespace Netlist {
       return false;
     }
     value = atoi( (char*)textValue );
+    free( textValue );
     return true;
   }
 
