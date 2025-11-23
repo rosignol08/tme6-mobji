@@ -123,7 +123,7 @@ namespace Netlist
 
     void Instance::toXml(ostream &stream)
     {
-        stream << indent << "<instance name=\"" << name_ << " mastercell=\"";
+        stream << indent << "<instance name=\"" << name_ << "\" mastercell=\"";
         if (masterCell_)
             stream << masterCell_->getName();
         else

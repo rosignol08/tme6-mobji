@@ -18,7 +18,7 @@ namespace Netlist{
     }
 
     Term::Term ( Instance* inst, const Term* modelTerm)
-        :   owner_      (),
+        :   owner_      (inst),
             name_       (modelTerm->getName()),
             direction_  (modelTerm->getDirection()),
             type_       (modelTerm->getType()),
@@ -70,10 +70,20 @@ namespace Netlist{
         //sinon il a pas d'owner cell donc on renvoie nullptr
         return nullptr;
     }
-    Instance*              Term::getInstance     ()const{
-        return (owner_ && isExternal()) ? static_cast<Instance*>(owner_) : nullptr;//checker ça
-
+    Instance* Term::getInstance() const {
+    //check si owner_ existe
+    if (!owner_) {
+        return nullptr;
     }
+    
+    //si un Term de Cell, owner_ est une Cell, donc pas d'instance
+    if (getCell() != nullptr) {
+        return nullptr;
+    }
+    
+    //sinon Term d'Instance
+    return static_cast<Instance*>(owner_);
+}
     Term::Direction              Term::getDirection    ()const{
         return this->direction_;
     }

@@ -195,7 +195,7 @@ le net qu'on doit crée est long
                     } else {
                         //cas terme d'une instance
                         inst = cell->getInstance(instanceName);
-                        //cerr << "[DEBUG] Instance '" << instanceName << "' " << (inst ? "found" : "NOT FOUND") << endl;
+                        cerr << "[DEBUG] Instance '" << instanceName << "' " << (inst ? "found" : "NOT FOUND") << endl;
                         if (inst) {
                             term = inst->getTerm(termName);
                             //cerr << "[DEBUG] Instance term '" << termName << "' " << (term ? "found" : "NOT FOUND") << endl;
