@@ -7,10 +7,10 @@ using namespace std;
 namespace Netlist{
 
     Term::Term ( Cell* cell, const std :: string & name , Direction direction)
-        :   owner_      (), 
+        :   owner_      (cell), 
             name_       (name),
             direction_  (direction),
-            type_       (),
+            type_       (Type::External),
             net_        (),
             node_       (Node(this, Netlist::Net::noid))
     {
@@ -21,7 +21,7 @@ namespace Netlist{
         :   owner_      (inst),
             name_       (modelTerm->getName()),
             direction_  (modelTerm->getDirection()),
-            type_       (modelTerm->getType()),
+            type_       (Type::Internal),
             net_        (modelTerm->getNet()),
             node_       (Node(this, (size_t) Net::noid))
     {
@@ -60,15 +60,16 @@ namespace Netlist{
         return this->net_;
     }
     Cell*                  Term::getCell         ()const{
-        return (owner_ && !isExternal()) ? static_cast<Cell*>(owner_) : nullptr;
+        return (owner_ && isExternal()) ? static_cast<Cell*>(owner_) : nullptr;
     }
     Cell*                  Term::getOwnerCell    ()const{
         //getOwnerCell() renvoie la Cell dans laquelle l'objet se trouve, ce qui, dans le cas d'un Term d'instance est la Cell possédant celle-ci.
         if(isExternal()){
             return static_cast<Cell*>(owner_); //obligé de cast
         }
-        //sinon il a pas d'owner cell donc on renvoie nullptr
-        return nullptr;
+        //sinon c'est un Term d'Instance, on renvoie la Cell qui possède l'Instance
+        Instance* inst = getInstance();
+        return inst ? inst->getCell() : nullptr;
     }
     Instance* Term::getInstance() const {
     //check si owner_ existe
@@ -133,7 +134,7 @@ namespace Netlist{
                 stream << "Unknown";
                 break;
         }
-        stream << "\"/>\n";
+        stream << "\" x=\"" << node_.getPosition().getX() << "\" y=\"" << node_.getPosition().getY() << "\"/>\n";
     }
     Term* Term::fromXml (Cell* cell, xmlTextReaderPtr reader ) {
         Term* term = nullptr;

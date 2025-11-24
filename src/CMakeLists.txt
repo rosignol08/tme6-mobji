@@ -18,7 +18,7 @@ set( includes Indentation.h Term.h Net.h Instance.h Point.h Node.h Cell.h)
 
 set( cpps Indentation.cpp Term.cpp Net.cpp Instance.cpp Point.cpp Node.cpp Cell.cpp Main.cpp XmlUtil.cpp XmlUtil.h)
 
-add_executable ( tme7 ${cpps} ) 
-install ( TARGETS tme7 DESTINATION bin ) 
+add_executable ( tme6 ${cpps} ) 
+install ( TARGETS tme6 DESTINATION bin ) 
 install ( FILES ${includes} DESTINATION include ) 
-target_link_libraries ( tme7 ${LIBXML2_LIBRARIES} )
+target_link_libraries ( tme6 ${LIBXML2_LIBRARIES} )
